@@ -9,7 +9,7 @@
   * { box-sizing: border-box; }
   body {
     margin: 0; min-height: 100vh;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, Helvetica, Arial, sans-serif;
     display: flex; align-items: center; justify-content: center;
     background: #f2f2f7; color: #1c1c1e;
     padding: 24px;
@@ -17,11 +17,14 @@
   @media (prefers-color-scheme: dark) {
     body { background: #000; color: #fff; }
     .card { background: #1c1c1e !important; }
-    .meta { color: #8e8e93 !important; }
+    .meta, .warn { color: #8e8e93 !important; }
+    .tab { color: #8e8e93; }
+    .tab.active { color: #fff; }
+    .steps li { border-color: #2c2c2e !important; }
   }
   .card {
     background: #fff; border-radius: 20px; padding: 32px 24px;
-    max-width: 420px; width: 100%; text-align: center;
+    max-width: 440px; width: 100%; text-align: center;
     box-shadow: 0 10px 40px rgba(0,0,0,0.12);
   }
   .icon {
@@ -31,39 +34,78 @@
     color: #fff; font-size: 40px; font-weight: 700;
   }
   h1 { font-size: 24px; margin: 0 0 4px; }
-  .meta { color: #6b6b70; font-size: 14px; margin: 0 0 24px; }
+  .meta { color: #6b6b70; font-size: 14px; margin: 0 0 20px; }
+
+  .tabs { display: flex; gap: 6px; background: rgba(120,120,128,0.12); border-radius: 12px; padding: 4px; margin: 0 0 22px; }
+  .tab { flex: 1; padding: 9px 0; border: none; background: transparent; border-radius: 9px;
+         font-size: 15px; font-weight: 600; color: #6b6b70; cursor: pointer; }
+  .tab.active { background: #fff; color: #0a84ff; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+  @media (prefers-color-scheme: dark) { .tab.active { background: #3a3a3c; color: #0a84ff; } }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
   .btn {
     display: block; width: 100%; padding: 15px 20px; border-radius: 14px;
-    background: #0a84ff; color: #fff; text-decoration: none;
-    font-size: 17px; font-weight: 600; border: none;
+    color: #fff; text-decoration: none; font-size: 17px; font-weight: 600; border: none;
   }
+  .btn.ios { background: #0a84ff; }
+  .btn.android { background: #3ddc84; color: #0b3d1f; }
   .btn:active { opacity: 0.85; }
-  .steps { text-align: left; margin: 24px 0 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.5; }
-  .steps li { padding: 6px 0 6px 26px; position: relative; }
+
+  .steps { text-align: left; margin: 22px 0 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.5; }
+  .steps li { padding: 7px 0 7px 26px; position: relative; }
   .steps li::before { content: "•"; position: absolute; left: 8px; color: #0a84ff; font-weight: 700; }
+  .panel.android .steps li::before { color: #1aa559; }
   .warn { font-size: 12.5px; color: #6b6b70; margin-top: 20px; line-height: 1.45; }
-  .hide-nonios { display: none; }
 </style>
 </head>
 <body>
   <div class="card">
     <div class="icon">EP</div>
     <h1>ENG_PORAL</h1>
-    <p class="meta">Version 1.0 (build 1) &middot; iOS 16+</p>
+    <p class="meta">Version 1.0 (build 1)</p>
 
-    <a class="btn" href="itms-services://?action=download-manifest&amp;url=https://mikebrownctdi.github.io/ctdi-ace1auto-updates/eng_poral/manifest.plist">Install ENG_PORAL</a>
+    <div class="tabs">
+      <button class="tab active" data-target="ios" onclick="pick('ios')">iPhone / iOS</button>
+      <button class="tab" data-target="android" onclick="pick('android')">Android</button>
+    </div>
 
-    <ul class="steps">
-      <li>Open this page in <strong>Safari</strong> on your iPhone (not Chrome).</li>
-      <li>Tap <strong>Install ENG_PORAL</strong>, then <strong>Install</strong> on the prompt.</li>
-      <li>Find the app on your Home Screen while it downloads.</li>
-      <li>First launch: go to <strong>Settings &rsaquo; General &rsaquo; VPN &amp; Device Management</strong>, tap <em>Communications Test Design, Inc.</em>, and tap <strong>Trust</strong>.</li>
-    </ul>
+    <!-- iOS -->
+    <div class="panel ios active" id="panel-ios">
+      <a class="btn ios" href="itms-services://?action=download-manifest&amp;url=https://mikebrownctdi.github.io/ctdi-ace1auto-updates/eng_poral/manifest.plist">Install for iPhone</a>
+      <ul class="steps">
+        <li>Open this page in <strong>Safari</strong> on your iPhone (not Chrome).</li>
+        <li>Tap <strong>Install for iPhone</strong>, then <strong>Install</strong> on the prompt.</li>
+        <li>Find the app on your Home Screen while it downloads.</li>
+        <li>First launch: go to <strong>Settings &rsaquo; General &rsaquo; VPN &amp; Device Management</strong>, tap <em>Communications Test Design, Inc.</em>, and tap <strong>Trust</strong>.</li>
+      </ul>
+      <p class="meta" style="margin-top:14px;">iOS 16 or later</p>
+    </div>
+
+    <!-- Android -->
+    <div class="panel android" id="panel-android">
+      <a class="btn android" href="https://mikebrownctdi.github.io/ctdi-ace1auto-updates/eng_poral/ENG_PORAL.apk">Download for Android</a>
+      <ul class="steps">
+        <li>Tap <strong>Download for Android</strong>, then open the downloaded APK.</li>
+        <li>If prompted, allow <strong>Install unknown apps</strong> for your browser (Settings offers the toggle inline).</li>
+        <li>Tap <strong>Install</strong>, then <strong>Open</strong>.</li>
+      </ul>
+      <p class="meta" style="margin-top:14px;">Android 8.0 (API 26) or later</p>
+    </div>
 
     <p class="warn">
-      Internal enterprise build. You must be on the <strong>CTDI network or VPN</strong> to install.
-      Requires an ENGR-role OLP login to use the app.
+      Internal CTDI engineering build. Requires an <strong>ENGR-role OLP login</strong> to use the app.
     </p>
   </div>
+
+  <script>
+    function pick(t){
+      document.querySelectorAll('.tab').forEach(function(b){ b.classList.toggle('active', b.dataset.target===t); });
+      document.querySelectorAll('.panel').forEach(function(p){ p.classList.toggle('active', p.id==='panel-'+t); });
+    }
+    // Default to the tab matching the visitor's device.
+    if (/android/i.test(navigator.userAgent)) { pick('android'); }
+  </script>
 </body>
 </html>
